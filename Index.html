@@ -1,0 +1,683 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ResolveAí</title>
+
+<style>
+:root {
+  --fundo: #101827;
+  --cartao: #1e293b;
+  --borda: #334155;
+  --texto: #f1f5f9;
+  --suave: #94a3b8;
+  --verde: #67e8a5;
+  --verde-escuro: #16a34a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: Arial, sans-serif;
+}
+
+header {
+  text-align: center;
+  padding: 28px 15px 20px;
+}
+
+header h1 {
+  color: var(--verde);
+  margin: 0 0 8px;
+  font-size: 32px;
+}
+
+header p {
+  color: var(--suave);
+  margin: 0;
+}
+
+main {
+  max-width: 850px;
+  margin: auto;
+  padding: 16px;
+}
+
+.navegacao {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pagina {
+  display: none;
+}
+
+#tab-inicio:checked ~ main #inicio,
+#tab-contador:checked ~ main #contador,
+#tab-datas:checked ~ main #datas,
+#tab-texto:checked ~ main #transformador,
+#tab-matematica:checked ~ main #matematica {
+  display: block;
+}
+
+.grade {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.cartao {
+  display: block;
+  padding: 20px 15px;
+  background: var(--cartao);
+  border: 1px solid var(--borda);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: border-color .2s;
+}
+
+.cartao:hover {
+  border-color: var(--verde);
+}
+
+.cartao h3 {
+  margin: 0 0 8px;
+  color: var(--verde);
+}
+
+.cartao p {
+  margin: 0;
+  color: var(--suave);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.painel {
+  padding: 18px;
+  background: var(--cartao);
+  border: 1px solid var(--borda);
+  border-radius: 14px;
+  margin: 14px 0;
+}
+
+h2, h3 {
+  color: var(--verde);
+}
+
+h2 {
+  margin-top: 0;
+}
+
+label.campo {
+  display: block;
+  margin: 14px 0 6px;
+  font-weight: bold;
+}
+
+input:not(.navegacao),
+textarea,
+select {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--borda);
+  border-radius: 9px;
+  background: #0f172a;
+  color: white;
+  font: inherit;
+}
+
+textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.botao {
+  display: inline-block;
+  padding: 11px 15px;
+  margin: 8px 5px 0 0;
+  border: none;
+  border-radius: 9px;
+  background: var(--verde-escuro);
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.botao.secundario {
+  background: #334155;
+}
+
+.botao.voltar {
+  background: transparent;
+  border: 1px solid var(--borda);
+  color: var(--texto);
+  margin-bottom: 8px;
+}
+
+.resultado {
+  margin-top: 14px;
+  padding: 13px;
+  background: #0f172a;
+  border-radius: 9px;
+  overflow-wrap: anywhere;
+}
+
+.resultado p {
+  margin: 8px 0;
+}
+
+.verde {
+  color: var(--verde);
+}
+
+.suave {
+  color: var(--suave);
+}
+
+.pergunta {
+  font-size: 25px;
+  font-weight: bold;
+  text-align: center;
+  margin: 25px 0;
+}
+
+.placar {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.aviso {
+  min-height: 24px;
+  margin-top: 12px;
+}
+
+footer {
+  padding: 20px;
+  text-align: center;
+  color: var(--suave);
+  font-size: 13px;
+}
+
+@media (max-width: 480px) {
+  .grade {
+    grid-template-columns: 1fr;
+  }
+
+  header h1 {
+    font-size: 28px;
+  }
+
+  main {
+    padding: 12px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>ResolveAí</h1>
+  <p>Ferramentas simples para facilitar seu dia!</p>
+</header>
+
+<input class="navegacao" type="radio" name="pagina" id="tab-inicio" checked>
+<input class="navegacao" type="radio" name="pagina" id="tab-contador">
+<input class="navegacao" type="radio" name="pagina" id="tab-datas">
+<input class="navegacao" type="radio" name="pagina" id="tab-texto">
+<input class="navegacao" type="radio" name="pagina" id="tab-matematica">
+
+<main>
+
+<!-- INÍCIO -->
+<section id="inicio" class="pagina">
+  <div class="painel">
+    <h2>O que você precisa resolver?</h2>
+    <p class="suave">Escolha uma ferramenta abaixo.</p>
+  </div>
+
+  <div class="grade">
+    <label class="cartao" for="tab-contador">
+      <h3>📝 Contador de texto</h3>
+      <p>Conte palavras, caracteres e linhas do seu texto.</p>
+    </label>
+
+    <label class="cartao" for="tab-datas">
+      <h3>📅 Calculadora de datas</h3>
+      <p>Calcule diferenças entre datas e adicione ou subtraia dias.</p>
+    </label>
+
+    <label class="cartao" for="tab-texto">
+      <h3>🔤 Transformador de texto</h3>
+      <p>Transforme seu texto em maiúsculas, minúsculas e mais.</p>
+    </label>
+
+    <label class="cartao" for="tab-matematica">
+      <h3>🧮 Jogo de matemática</h3>
+      <p>Pratique contas e tente aumentar sua pontuação.</p>
+    </label>
+  </div>
+</section>
+
+<!-- CONTADOR DE TEXTO -->
+<section id="contador" class="pagina">
+  <label class="botao voltar" for="tab-inicio">← Voltar ao início</label>
+
+  <div class="painel">
+    <h2>📝 Contador de texto</h2>
+    <p class="suave">Digite ou cole seu texto abaixo.</p>
+
+    <label class="campo" for="texto">Seu texto</label>
+    <textarea id="texto" placeholder="Escreva alguma coisa..."></textarea>
+
+    <div class="resultado">
+      <p>Palavras: <strong id="palavras" class="verde">0</strong></p>
+      <p>Caracteres: <strong id="caracteres" class="verde">0</strong></p>
+      <p>Caracteres sem espaços: <strong id="semEspacos" class="verde">0</strong></p>
+      <p>Linhas: <strong id="linhas" class="verde">0</strong></p>
+    </div>
+
+    <button class="botao secundario" id="limparContador">Limpar texto</button>
+  </div>
+</section>
+
+<!-- CALCULADORA DE DATAS -->
+<section id="datas" class="pagina">
+  <label class="botao voltar" for="tab-inicio">← Voltar ao início</label>
+
+  <div class="painel">
+    <h2>📅 Calculadora de datas</h2>
+    <p class="suave">Descubra quantos dias existem entre duas datas.</p>
+
+    <label class="campo" for="data1">Data inicial</label>
+    <input type="date" id="data1">
+
+    <label class="campo" for="data2">Data final</label>
+    <input type="date" id="data2">
+
+    <button class="botao" id="calcularDatas">Calcular diferença</button>
+    <button class="botao secundario" id="limparDatas">Limpar</button>
+
+    <div class="resultado" id="resultadoDatas">
+      O resultado aparecerá aqui.
+    </div>
+  </div>
+
+  <div class="painel">
+    <h2>➕ Adicionar ou subtrair dias</h2>
+
+    <label class="campo" for="dataBase">Data de referência</label>
+    <input type="date" id="dataBase">
+
+    <label class="campo" for="dias">Quantidade de dias</label>
+    <input type="number" id="dias" value="7" step="1" min="0">
+
+    <label class="campo" for="operacao">Operação</label>
+    <select id="operacao">
+      <option value="1">Adicionar dias</option>
+      <option value="-1">Subtrair dias</option>
+    </select>
+
+    <button class="botao" id="calcularNovaData">Calcular nova data</button>
+
+    <div class="resultado" id="resultadoNovaData">
+      A nova data aparecerá aqui.
+    </div>
+  </div>
+</section>
+
+<!-- TRANSFORMADOR DE TEXTO -->
+<section id="transformador" class="pagina">
+  <label class="botao voltar" for="tab-inicio">← Voltar ao início</label>
+
+  <div class="painel">
+    <h2>🔤 Transformador de texto</h2>
+    <p class="suave">Digite seu texto e escolha como deseja transformá-lo.</p>
+
+    <label class="campo" for="textoOriginal">Seu texto</label>
+    <textarea id="textoOriginal" placeholder="Digite ou cole seu texto aqui..."></textarea>
+
+    <div class="grade" style="margin-top:10px">
+      <button class="botao" data-tipo="maiusculas">MAIÚSCULAS</button>
+      <button class="botao" data-tipo="minusculas">minúsculas</button>
+      <button class="botao" data-tipo="titulo">Formato de título</button>
+      <button class="botao" data-tipo="inverter">Inverter letras</button>
+    </div>
+
+    <label class="campo" for="textoFinal">Resultado</label>
+    <textarea id="textoFinal" placeholder="O resultado aparecerá aqui..." readonly></textarea>
+
+    <button class="botao" id="copiar">Copiar resultado</button>
+    <button class="botao secundario" id="limparTexto">Limpar</button>
+    <p id="avisoCopia" class="suave aviso" aria-live="polite"></p>
+  </div>
+</section>
+
+<!-- JOGO DE MATEMÁTICA -->
+<section id="matematica" class="pagina">
+  <label class="botao voltar" for="tab-inicio">← Voltar ao início</label>
+
+  <div class="painel">
+    <h2>🧮 Jogo de matemática</h2>
+    <p class="suave">Resolva as contas e acumule pontos!</p>
+
+    <div class="placar">
+      <p>Fase: <strong class="verde" id="fase">1</strong></p>
+      <p>Pontos: <strong class="verde" id="pontos">0</strong></p>
+      <p>Acertos: <strong class="verde" id="acertos">0</strong></p>
+      <p>Recorde: <strong class="verde" id="recorde">0</strong></p>
+    </div>
+
+    <div class="resultado">
+      <div class="pergunta" id="pergunta">Quanto é 2 + 2?</div>
+
+      <label class="campo" for="resposta">Sua resposta</label>
+      <input type="number" id="resposta" placeholder="Digite o resultado">
+
+      <button class="botao" id="verificar">Verificar</button>
+      <button class="botao secundario" id="pular">Pular pergunta</button>
+
+      <p class="aviso" id="feedback" aria-live="polite"></p>
+    </div>
+
+    <button class="botao secundario" id="reiniciar">Reiniciar jogo</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  ResolveAí — ferramentas gratuitas para o dia a dia.
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  // CONTADOR DE TEXTO
+  const texto = document.getElementById("texto");
+
+  function atualizarContador() {
+    const valor = texto.value;
+    const palavras = valor.trim()
+      ? valor.trim().split(/\s+/).length
+      : 0;
+
+    document.getElementById("palavras").textContent = palavras;
+    document.getElementById("caracteres").textContent = valor.length;
+    document.getElementById("semEspacos").textContent =
+      valor.replace(/\s/g, "").length;
+    document.getElementById("linhas").textContent =
+      valor.length ? valor.split(/\r\n|\r|\n/).length : 0;
+  }
+
+  texto.addEventListener("input", atualizarContador);
+
+  document.getElementById("limparContador").addEventListener("click", function () {
+    texto.value = "";
+    atualizarContador();
+    texto.focus();
+  });
+
+  // CALCULADORA DE DATAS
+  function lerData(valor) {
+    if (!valor) return null;
+
+    const partes = valor.split("-").map(Number);
+    return new Date(Date.UTC(partes[0], partes[1] - 1, partes[2]));
+  }
+
+  function formatarData(data) {
+    return String(data.getUTCDate()).padStart(2, "0") + "/" +
+      String(data.getUTCMonth() + 1).padStart(2, "0") + "/" +
+      data.getUTCFullYear();
+  }
+
+  document.getElementById("calcularDatas").addEventListener("click", function () {
+    const a = lerData(document.getElementById("data1").value);
+    const b = lerData(document.getElementById("data2").value);
+    const saida = document.getElementById("resultadoDatas");
+
+    if (!a || !b) {
+      saida.textContent = "Preencha as duas datas.";
+      return;
+    }
+
+    const total = Math.abs(b.getTime() - a.getTime()) / 86400000;
+    saida.textContent = "Diferença: " + total + " dia(s).";
+  });
+
+  document.getElementById("calcularNovaData").addEventListener("click", function () {
+    const base = lerData(document.getElementById("dataBase").value);
+    const quantidade = Number(document.getElementById("dias").value);
+    const operacao = Number(document.getElementById("operacao").value);
+    const saida = document.getElementById("resultadoNovaData");
+
+    if (!base || document.getElementById("dias").value.trim() === "" ||
+        !Number.isFinite(quantidade) || quantidade < 0) {
+      saida.textContent = "Informe uma data e uma quantidade válida de dias.";
+      return;
+    }
+
+    base.setUTCDate(base.getUTCDate() + quantidade * operacao);
+    saida.textContent = "Nova data: " + formatarData(base) + ".";
+  });
+
+  // BOTÃO LIMPAR DA CALCULADORA DE DATAS
+  document.getElementById("limparDatas").addEventListener("click", function () {
+    document.getElementById("data1").value = "";
+    document.getElementById("data2").value = "";
+    document.getElementById("dataBase").value = "";
+    document.getElementById("dias").value = "7";
+    document.getElementById("operacao").value = "1";
+
+    document.getElementById("resultadoDatas").textContent =
+      "O resultado aparecerá aqui.";
+    document.getElementById("resultadoNovaData").textContent =
+      "A nova data aparecerá aqui.";
+  });
+
+  // TRANSFORMADOR DE TEXTO
+  const textoOriginal = document.getElementById("textoOriginal");
+  const textoFinal = document.getElementById("textoFinal");
+  const avisoCopia = document.getElementById("avisoCopia");
+
+  document.querySelectorAll("[data-tipo]").forEach(function (botao) {
+    botao.addEventListener("click", function () {
+      const valor = textoOriginal.value;
+      const tipo = botao.dataset.tipo;
+
+      if (tipo === "maiusculas") {
+        textoFinal.value = valor.toLocaleUpperCase("pt-BR");
+      } else if (tipo === "minusculas") {
+        textoFinal.value = valor.toLocaleLowerCase("pt-BR");
+      } else if (tipo === "titulo") {
+        textoFinal.value = valor.toLocaleLowerCase("pt-BR")
+          .replace(/(^|[\s.!?])([a-zà-ú])/g, function (trecho, separador, letra) {
+            return separador + letra.toLocaleUpperCase("pt-BR");
+          });
+      } else if (tipo === "inverter") {
+        textoFinal.value = Array.from(valor).reverse().join("");
+      }
+
+      avisoCopia.textContent = "";
+    });
+  });
+
+  document.getElementById("copiar").addEventListener("click", async function () {
+    avisoCopia.textContent = "";
+
+    if (!textoFinal.value) {
+      avisoCopia.textContent = "Não há resultado para copiar.";
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(textoFinal.value);
+      avisoCopia.textContent = "Resultado copiado!";
+    } catch (erro) {
+      textoFinal.removeAttribute("readonly");
+      textoFinal.select();
+      const copiou = document.execCommand("copy");
+      textoFinal.setAttribute("readonly", "");
+      avisoCopia.textContent = copiou
+        ? "Resultado copiado!"
+        : "Não foi possível copiar automaticamente. Selecione e copie o texto.";
+    }
+  });
+
+  document.getElementById("limparTexto").addEventListener("click", function () {
+    textoOriginal.value = "";
+    textoFinal.value = "";
+    avisoCopia.textContent = "";
+  });
+
+  // JOGO DE MATEMÁTICA
+  let fase = 1;
+  let pontos = 0;
+  let acertos = 0;
+  let respostaCorreta = 4;
+  let respondida = false;
+  let recorde = 0;
+
+  try {
+    recorde = Number(localStorage.getItem("resolveAiRecorde")) || 0;
+  } catch (erro) {
+    recorde = 0;
+  }
+
+  document.getElementById("recorde").textContent = recorde;
+
+  function novaPergunta() {
+    respondida = false;
+
+    const nivel = Math.min(fase, 10);
+    const tipo = Math.floor(Math.random() * Math.min(4, 2 + Math.floor(nivel / 3)));
+    const limite = 5 + nivel * 3;
+    let a = Math.floor(Math.random() * limite) + 1;
+    let b = Math.floor(Math.random() * limite) + 1;
+    let simbolo = "+";
+
+    if (tipo === 0) {
+      respostaCorreta = a + b;
+      simbolo = "+";
+    } else if (tipo === 1) {
+      if (b > a) {
+        const troca = a;
+        a = b;
+        b = troca;
+      }
+      respostaCorreta = a - b;
+      simbolo = "−";
+    } else if (tipo === 2) {
+      a = Math.floor(Math.random() * (3 + nivel)) + 1;
+      b = Math.floor(Math.random() * 10) + 1;
+      respostaCorreta = a * b;
+      simbolo = "×";
+    } else {
+      b = Math.floor(Math.random() * 9) + 1;
+      a = b * (Math.floor(Math.random() * 10) + 1);
+      respostaCorreta = a / b;
+      simbolo = "÷";
+    }
+
+    document.getElementById("pergunta").textContent =
+      a + " " + simbolo + " " + b + " = ?";
+    document.getElementById("resposta").value = "";
+    document.getElementById("feedback").textContent = "";
+    document.getElementById("resposta").focus();
+  }
+
+  function atualizarPlacar() {
+    document.getElementById("fase").textContent = fase;
+    document.getElementById("pontos").textContent = pontos;
+    document.getElementById("acertos").textContent = acertos;
+    document.getElementById("recorde").textContent = recorde;
+  }
+
+  function verificarResposta() {
+    if (respondida) return;
+
+    const campo = document.getElementById("resposta");
+    const feedback = document.getElementById("feedback");
+
+    if (campo.value.trim() === "") {
+      feedback.textContent = "Digite sua resposta primeiro.";
+      return;
+    }
+
+    const resposta = Number(campo.value);
+    respondida = true;
+
+    if (resposta === respostaCorreta) {
+      pontos += 10;
+      acertos++;
+      fase = Math.floor(acertos / 5) + 1;
+      feedback.textContent = "✅ Acertou! +10 pontos!";
+
+      if (pontos > recorde) {
+        recorde = pontos;
+        try {
+          localStorage.setItem("resolveAiRecorde", String(recorde));
+        } catch (erro) {
+          // O jogo continua funcionando mesmo sem armazenamento.
+        }
+      }
+    } else {
+      feedback.textContent = "❌ Não foi dessa vez! Resposta: " + respostaCorreta;
+    }
+
+    atualizarPlacar();
+  }
+
+  document.getElementById("verificar").addEventListener("click", function () {
+    if (respondida) {
+      novaPergunta();
+    } else {
+      verificarResposta();
+    }
+  });
+
+  document.getElementById("resposta").addEventListener("keydown", function (evento) {
+    if (evento.key === "Enter") {
+      if (respondida) {
+        novaPergunta();
+      } else {
+        verificarResposta();
+      }
+    }
+  });
+
+  document.getElementById("pular").addEventListener("click", function () {
+    document.getElementById("feedback").textContent =
+      "Resposta: " + respostaCorreta;
+    respondida = true;
+  });
+
+  document.getElementById("reiniciar").addEventListener("click", function () {
+    fase = 1;
+    pontos = 0;
+    acertos = 0;
+    atualizarPlacar();
+    novaPergunta();
+  });
+
+  novaPergunta();
+})();
+</script>
+
+</body>
+  </html>
+  
